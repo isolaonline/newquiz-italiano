@@ -1,49 +1,71 @@
-const CACHE_NAME = 'QUIZ_IT_v3';
-const PRECACHE = [
-  './',
-  './index.html',
-  './styles.css',
-  './app.js',
-  './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/apple-touch-icon.png'
+const CACHE_NAME = 'quiz-it-v1.2';
+const PRECACHE_ASSETS = [
+  '/',
+  '/index.html',
+  '/styles.css',
+  '/app.js',
+  '/manifest.webmanifest',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/icons/maskable-192.png',
+  '/icons/maskable-512.png',
+  '/icons/apple-touch-icon.png'
 ];
 
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE)));
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k === CACHE_NAME ? null : caches.delete(k))))
-    )
+// Install
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_ASSETS))
+      .then(() => self.skipWaiting())
   );
-  self.clients.claim();
 });
 
-// Stale-While-Revalidate per /data/ (dataset)
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
+// Activate + cleanup
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(names => {
+      return Promise.all(
+        names.filter(n => n !== CACHE_NAME).map(n => caches.delete(n))
+      );
+    }).then(() => self.clients.claim())
+  );
+});
 
-  if (url.pathname.includes('/data/')) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(event.request);
-      const network = fetch(event.request).then(res => {
-        cache.put(event.request, res.clone()); return res;
-      }).catch(()=>null);
-      return cached || network || new Response(JSON.stringify({
-        error:'offline', message:'Sei offline — ricarica quando torni online.'
-      }), { headers:{'Content-Type':'application/json'}, status:200 });
-    })());
+// Fetch
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+
+  // Questions JSON - Stale-While-Revalidate
+  if (url.pathname.startsWith('/data/questions')) {
+    e.respondWith(
+      caches.open(CACHE_NAME).then(cache => {
+        return fetch(e.request).then(response => {
+          cache.put(e.request, response.clone());
+          return response;
+        }).catch(() => {
+          return cache.match(e.request).then(cached => {
+            if (cached) return cached;
+            return caches.match('/offline.html') || new Response('Offline', { status: 503 });
+          });
+        });
+      })
+    );
     return;
   }
 
-  // Cache-first per tutto il resto della shell
-  event.respondWith(
-    caches.match(event.request).then(resp => resp || fetch(event.request))
+  // Shell assets - Cache First
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      return cached || fetch(e.request).then(fetched => {
+        if (e.request.destination === 'document' || e.request.destination === 'script' || e.request.destination === 'style') {
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, fetched.clone()));
+        }
+        return fetched;
+      });
+    }).catch(() => {
+      if (e.request.destination === 'document') {
+        return caches.match('/index.html');
+      }
+    })
   );
 });
