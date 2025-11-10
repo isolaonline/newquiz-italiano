@@ -1,255 +1,238 @@
-/* ========= Costanti & Storage ========= */
-const STATE_V = 'v1';
-const STORAGE_LAST20 = `quizIT_last20_${STATE_V}`;
-const STORAGE_BEST   = `quizIT_best_${STATE_V}`;
-const STORAGE_SETTINGS = `quizIT_settings_${STATE_V}`;
-
-/* ========= Stato ========= */
-let settings = loadSettings();
-let dataset = { version: 1, medie:[], licei:[], universita:[] };
-let level = 'medie';
-let pool = [];           // tutte le domande (livello)
-let game = [];           // domande della partita
-let idx = 0;
-let score = 0;
-let best = parseInt(localStorage.getItem(STORAGE_BEST) || '0', 10);
-let lifelineUsed = false;
-let hiddenOptions = [];
-let timer = null;
-let timeLeft = 30;
-
-/* ========= Elementi ========= */
-const $ = (id)=>document.getElementById(id);
-const els = {
-  intro: $('intro'), quiz: $('quiz'), results: $('results'),
-  qIndex: $('qIndex'), levelBadge: $('levelBadge'), progressFill: $('progressFill'),
-  category: $('category'), question: $('question'), options: $('options'),
-  explanation: $('explanation'), timer: $('timer'),
-  btnStart: $('btnStart'), btnNext: $('btnNext'), btnQuit: $('btnQuit'),
-  btnNew: $('btnNewGame'), btnShare: $('btnShare'), btn5050: $('btn5050'),
-  btnSettings: $('btnSettings'), sheet: $('settingsSheet'),
-  toggleTimer: $('toggleTimer'), toggleHaptics: $('toggleHaptics'), btnCloseSettings: $('btnCloseSettings'),
-  bestLabel: $('bestLabel')
+// app.js - vanilla ES6 modules
+const STATE = {
+  level: 'medie',
+  questions: [],
+  usedIds: [],
+  current: 0,
+  score: 0,
+  streak: 0,
+  timerEnabled: true,
+  timerInterval: null,
+  timeLeft: 30
 };
 
-/* ========= Init ========= */
-document.querySelectorAll('.segment').forEach(b=>{
-  b.addEventListener('click', ()=>{
-    document.querySelectorAll('.segment').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    level = b.dataset.level;
-  });
-});
+const DOM = {
+  home: document.getElementById('home'),
+  settings: document.getElementById('settings'),
+  quiz: document.getElementById('quiz'),
+  result: document.getElementById('result'),
+  offline: document.getElementById('offline'),
+  levelBtns: document.querySelectorAll('[data-level]'),
+  startBtn: document.getElementById('start-btn'),
+  timerToggle: document.getElementById('timer-toggle'),
+  questionEl: document.getElementById('question'),
+  optionsEl: document.getElementById('options'),
+  feedbackEl: document.getElementById('feedback'),
+  currentEl: document.getElementById('current'),
+  totalEl: document.getElementById('total'),
+  timerEl: document.getElementById('timer'),
+  scoreEl: document.getElementById('score'),
+  evaluationEl: document.getElementById('evaluation'),
+  streakEl: document.getElementById('streak').querySelector('span'),
+  recordEl: document.getElementById('record').querySelector('span')
+};
 
-els.btnStart.addEventListener('click', start);
-els.btnNext.addEventListener('click', next);
-els.btnQuit.addEventListener('click', showIntro);
-els.btnNew.addEventListener('click', showIntro);
-els.btnShare.addEventListener('click', shareScore);
+// Init
+document.addEventListener('DOMContentLoaded', init);
 
-els.btnSettings.addEventListener('click', ()=>els.sheet.classList.remove('hidden'));
-els.btnCloseSettings.addEventListener('click', ()=>els.sheet.classList.add('hidden'));
-els.sheet.addEventListener('click', (e)=>{ if(e.target===els.sheet) els.sheet.classList.add('hidden'); });
-
-els.toggleTimer.checked = settings.timer;
-els.toggleHaptics.checked = settings.haptics;
-els.toggleTimer.addEventListener('change', ()=>{ settings.timer = els.toggleTimer.checked; saveSettings(); });
-els.toggleHaptics.addEventListener('change', ()=>{ settings.haptics = els.toggleHaptics.checked; saveSettings(); });
-
-els.bestLabel.textContent = `${best}/20`;
-
-async function start(){
-  await loadData();
-  const last = loadLast20();
-  const filtered = pool.filter(q => !last.includes(q.id));
-  const TOTAL = Math.min(20, (filtered.length || pool.length));
-  const source = (filtered.length >= TOTAL) ? filtered : pool;
-
-  game = shuffle(source).slice(0, TOTAL);
-  idx = 0; score = 0; lifelineUsed = false; hiddenOptions = [];
-  show(els.quiz); hide(els.results); hide(els.intro);
-  render();
+async function init() {
+  loadSettings();
+  setupEventListeners();
+  await loadQuestions();
+  if (!STATE.questions.length) showScreen('offline');
 }
 
-/* ========= Data ========= */
-async function loadData(){
-  try{
-    const r = await fetch('data/questions.sample.json', { cache: 'no-store' });
-    dataset = await r.json();
-    pool = (dataset[level] || []).slice();
-  }catch(e){
-    console.warn('Impossibile caricare il dataset:', e);
-    dataset = { version: 1, medie:[], licei:[], universita:[] };
-    pool = [];
+function setupEventListeners() {
+  DOM.levelBtns.forEach(b => b.addEventListener('click', e => {
+    DOM.levelBtns.forEach(x => x.classList.remove('active'));
+    e.target.classList.add('active');
+    STATE.level = e.target.dataset.level;
+  }));
+
+  DOM.startBtn.addEventListener('click', startQuiz);
+  document.getElementById('settings-btn').addEventListener('click', () => showScreen('settings'));
+  document.getElementById('back-home').addEventListener('click', () => showScreen('home'));
+  DOM.timerToggle.addEventListener('change', e => {
+    STATE.timerEnabled = e.target.checked;
+    localStorage.setItem('quiz-timer', STATE.timerEnabled);
+  });
+  document.getElementById('restart-btn').addEventListener('click', () => showScreen('home'));
+  document.getElementById('share-btn').addEventListener('click', shareScore);
+  document.getElementById('retry-offline').addEventListener('click', () => location.reload());
+}
+
+async function loadQuestions() {
+  try {
+    const res = await fetch('data/questions.sample.json?v=' + Date.now());
+    const data = await res.json();
+    STATE.questions = data.questions.filter(q => q.level === STATE.level);
+    const saved = localStorage.getItem('quiz-used-' + data.version);
+    if (saved) STATE.usedIds = JSON.parse(saved);
+  } catch (e) {
+    const cached = await caches.match('data/questions.sample.json');
+    if (cached) {
+      const data = await cached.json();
+      STATE.questions = data.questions.filter(q => q.level === STATE.level);
+    }
   }
 }
 
-/* ========= Render ========= */
-function render(){
-  if (idx >= game.length) return showResults();
-  const q = game[idx];
-  const TOTAL = game.length;
-  els.qIndex.textContent = `Domanda ${idx+1}/${TOTAL}`;
-  els.levelBadge.textContent = titleCase(level);
-  els.progressFill.style.width = `${((idx+1)/TOTAL)*100}%`;
-  els.category.textContent = q.cat || '';
-  els.question.textContent = q.q || '';
-
-  // opzioni
-  els.options.innerHTML = '';
-  q.opts.forEach((o,i)=>{
-    if (hiddenOptions.includes(i)) return;
-    const b=document.createElement('button');
-    b.className='opt';
-    b.textContent=o;
-    b.onclick=()=>select(i);
-    b.onkeydown=(ev)=>{ if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); select(i); } };
-    b.setAttribute('role','button');
-    b.setAttribute('aria-pressed','false');
-    els.options.appendChild(b);
-  });
-
-  els.explanation.classList.add('hidden');
-  els.btnNext.classList.add('hidden');
-
-  // timer
-  setupTimer();
+function startQuiz() {
+  STATE.current = 0;
+  STATE.score = 0;
+  STATE.streak = 0;
+  STATE.timeLeft = 30;
+  const pool = STATE.questions.filter(q => !STATE.usedIds.includes(q.id));
+  STATE.gameQuestions = shuffle(pool).slice(0, 20);
+  if (STATE.gameQuestions.length < 20) {
+    STATE.usedIds = [];
+    localStorage.removeItem('quiz-used-' + getVersion());
+    STATE.gameQuestions = shuffle(STATE.questions).slice(0, 20);
+  }
+  DOM.totalEl.textContent = STATE.gameQuestions.length;
+  showScreen('quiz');
+  showQuestion();
 }
 
-/* ========= Timer ========= */
-function setupTimer(){
-  clearInterval(timer);
-  if(!settings.timer){ els.timer.classList.add('hidden'); return; }
-  timeLeft = 30;
-  els.timer.textContent = '30″';
-  els.timer.classList.remove('hidden');
-  timer = setInterval(()=>{
-    timeLeft--;
-    els.timer.textContent = `${timeLeft}″`;
-    if(timeLeft<=0){
-      clearInterval(timer);
-      vibrate(true);
-      revealOnlyCorrect();
-      showExplanation(game[idx].exp);
+function showQuestion() {
+  const q = STATE.gameQuestions[STATE.current];
+  DOM.currentEl.textContent = STATE.current + 1;
+  DOM.questionEl.textContent = q.text;
+  DOM.optionsEl.innerHTML = '';
+  DOM.feedbackEl.classList.add('hidden');
+  DOM.feedbackEl.innerHTML = '';
+
+  const options = shuffle([...q.incorrect, q.correct]);
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => selectAnswer(opt, q.correct, q.explanation));
+    DOM.optionsEl.appendChild(btn);
+  });
+
+  if (STATE.timerEnabled) startTimer();
+}
+
+function selectAnswer(selected, correct, explanation) {
+  if (DOM.optionsEl.dataset.answered) return;
+  DOM.optionsEl.dataset.answered = 'true';
+  clearInterval(STATE.timerInterval);
+
+  const correctBtn = [...DOM.optionsEl.children].find(b => b.textContent === correct);
+  const selectedBtn = [...DOM.optionsEl.children].find(b => b.textContent === selected);
+
+  const isCorrect = selected === correct;
+  if (isCorrect) {
+    STATE.score++;
+    STATE.streak++;
+    selectedBtn.classList.add('correct');
+    hapticSuccess();
+  } else {
+    STATE.streak = 0;
+    selectedBtn.classList.add('wrong');
+    correctBtn.classList.add('correct');
+    hapticError();
+  }
+
+  DOM.feedbackEl.innerHTML = `<p><strong>${isCorrect ? 'Corretto!' : 'Sbagliato'}</strong></p><p>${explanation}</p>`;
+  DOM.feedbackEl.classList.remove('hidden');
+
+  setTimeout(() => {
+    STATE.current++;
+    if (STATE.current < STATE.gameQuestions.length) {
+      DOM.optionsEl.dataset.answered = '';
+      STATE.timeLeft = 30;
+      DOM.timerEl.textContent = 30;
+      showQuestion();
+    } else {
+      endQuiz();
+    }
+  }, 3000);
+}
+
+function startTimer() {
+  clearInterval(STATE.timerInterval);
+  DOM.timerEl.textContent = STATE.timeLeft;
+  STATE.timerInterval = setInterval(() => {
+    STATE.timeLeft--;
+    DOM.timerEl.textContent = STATE.timeLeft;
+    if (STATE.timeLeft <= 0) {
+      clearInterval(STATE.timerInterval);
+      selectAnswer('', STATE.gameQuestions[STATE.current].correct, "Tempo scaduto!");
     }
   }, 1000);
 }
 
-/* ========= Selezione ========= */
-function select(i){
-  clearInterval(timer);
-  const q = game[idx];
-  const btns = els.options.querySelectorAll('button');
-  btns.forEach((b,ix)=>{
-    if(ix===q.ans) b.classList.add('correct');
-    else if(ix===i) b.classList.add('wrong');
-    b.disabled = true;
-  });
-  if(i===q.ans){ score++; vibrate(false); } else { vibrate(true); }
-  showExplanation(q.exp);
-}
-function revealOnlyCorrect(){
-  const q = game[idx];
-  const btns = els.options.querySelectorAll('button');
-  btns.forEach((b,ix)=>{ if(ix===q.ans) b.classList.add('correct'); b.disabled = true; });
-}
-function showExplanation(text){
-  els.explanation.textContent = text || '';
-  els.explanation.classList.remove('hidden');
-  els.btnNext.classList.remove('hidden');
-}
+function endQuiz() {
+  const percentage = Math.round((STATE.score / STATE.gameQuestions.length) * 100);
+  DOM.scoreEl.textContent = percentage + '%';
+  DOM.streakEl.textContent = STATE.streak;
+  const record = localStorage.getItem('quiz-record-' + STATE.level) || 0;
+  if (percentage > record) {
+    localStorage.setItem('quiz-record-' + STATE.level, percentage);
+    DOM.recordEl.textContent = percentage + '% (nuovo!)';
+  } else {
+    DOM.recordEl.textContent = record + '%';
+  }
 
-/* ========= 50:50 ========= */
-els.btn5050.addEventListener('click', ()=>{
-  if(lifelineUsed) return;
-  lifelineUsed = true;
-  const q = game[idx];
-  const wrong = [0,1,2].filter(i=>i!==q.ans);
-  hiddenOptions = shuffle(wrong).slice(0,2);
-  render();
-});
+  const evalText = percentage >= 90 ? 'Eccellente!' :
+                   percentage >= 70 ? 'Molto bene!' :
+                   percentage >= 50 ? 'Discreto' : 'Riprovaci!';
+  DOM.evaluationEl.textContent = evalText;
 
-/* ========= Avanzamento ========= */
-function next(){
-  idx++; hiddenOptions=[]; clearInterval(timer);
-  if(idx>=game.length){ showResults(); return; }
-  render();
+  // Save used IDs
+  const version = getVersion();
+  const newUsed = STATE.gameQuestions.map(q => q.id);
+  STATE.usedIds.push(...newUsed);
+  if (STATE.usedIds.length > 500) STATE.usedIds = STATE.usedIds.slice(-400);
+  localStorage.setItem('quiz-used-' + version, JSON.stringify(STATE.usedIds));
+
+  showScreen('result');
 }
 
-/* ========= Risultati ========= */
-function showResults(){
-  saveLast20(game.map(q=>q.id).slice(-20));
-  const TOTAL = game.length;
-  const pct = Math.round((score/TOTAL)*100);
-  $('percent').textContent = `${pct}%`;
-  $('rightCount').textContent = `${score}`;
-  $('wrongCount').textContent = `${TOTAL-score}`;
-  if(score>best){ best=score; localStorage.setItem(STORAGE_BEST, String(best)); }
-  $('bestScore').textContent = `${best}/${TOTAL}`;
-  hide(els.quiz); show(els.results); hide(els.intro);
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-/* ========= Share ========= */
-function shareScore(){
-  const TOTAL = game.length || 20;
-  const msg = `Quiz Italiano — ${Math.round((score/TOTAL)*100)}% (${score}/${TOTAL}) — Livello ${titleCase(level)}`;
-  if(navigator.share) navigator.share({title:'Risultato Quiz', text:msg});
-  else { navigator.clipboard.writeText(msg); alert('Punteggio copiato!'); }
+function loadSettings() {
+  const saved = localStorage.getItem('quiz-timer');
+  if (saved !== null) {
+    STATE.timerEnabled = saved === 'true';
+    DOM.timerToggle.checked = STATE.timerEnabled;
+  }
 }
 
-/* ========= Utils ========= */
-function show(el){ el.classList.remove('hidden'); el.setAttribute('aria-hidden','false'); }
-function hide(el){ el.classList.add('hidden'); el.setAttribute('aria-hidden','true'); }
-function shuffle(a){ return a.sort(()=>Math.random()-.5); }
-function titleCase(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
-
-function vibrate(fail){
-  try{
-    if(!settings.haptics) return;
-    if(navigator.vibrate) navigator.vibrate(fail ? [25,60,25] : 20);
-  }catch(e){}
+async function shareScore() {
+  const text = `Ho ottenuto ${DOM.scoreEl.textContent} al Quiz Italiano (${STATE.level})!`;
+  if (navigator.share) {
+    try {
+      await navigator.share({ text });
+    } catch {}
+  } else {
+    navigator.clipboard.writeText(text);
+    alert('Punteggio copiato negli appunti!');
+  }
 }
 
-function loadSettings(){
-  try{ const s = JSON.parse(localStorage.getItem(STORAGE_SETTINGS)||'{}');
-    return { timer: s.timer ?? true, haptics: s.haptics ?? true };
-  }catch{ return { timer:true, haptics:true }; }
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
-function saveSettings(){ localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings)); }
-function loadLast20(){ try{ return JSON.parse(localStorage.getItem(STORAGE_LAST20)||'[]'); }catch{return [];} }
-function saveLast20(ids){ localStorage.setItem(STORAGE_LAST20, JSON.stringify(ids||[])); }
-// ===== RESET HARD (funziona sempre) =====
-window.resetGame = function () {
-  try { clearInterval(timer); } catch (e) {}
-  lifelineUsed = false;
-  hiddenOptions = [];
-  idx = 0; score = 0;
 
-  // pulizia UI
-  els.explanation?.classList.add('hidden');
-  els.btnNext?.classList.add('hidden');
+function getVersion() {
+  return document.querySelector('link[rel="manifest"]')?.href.includes('sample') ? 'sample' : 'v1';
+}
 
-  // torna alla schermata iniziale
-  els.quiz?.classList.add('hidden');
-  els.results?.classList.add('hidden');
-  els.intro?.classList.remove('hidden');
-
-  // riattiva eventuali opzioni rimaste disabilitate
-  document.querySelectorAll('#options button')
-    .forEach(b => b && (b.disabled = false, b.classList.remove('correct','wrong')));
-};
-
-// collega anche via JS (oltre all'onclick in HTML)
-document.getElementById('btnNewGame')?.addEventListener('click', (e)=>{
-  e.preventDefault();
-  window.resetGame();
-});
-document.getElementById('btnQuit')?.addEventListener('click', (e)=>{
-  e.preventDefault();
-  window.resetGame();
-});
-document.getElementById('btnHome')?.addEventListener('click', (e)=>{
-  e.preventDefault();
-  window.resetGame();
-});
-
+// Haptics (iOS only)
+function hapticSuccess() {
+  if (navigator.vibrate) navigator.vibrate(50);
+}
+function hapticError() {
+  if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+}
