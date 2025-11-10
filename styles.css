@@ -1,269 +1,193 @@
-/* ===============================
-   PALETTE ISTITUZIONALE / iOS STYLE
-   =============================== */
+/* =========================================
+   QUIZ ITALIANO — STYLES (istituzionale / iOS-like)
+   ========================================= */
 
-:root {
-  --bg: #f7f9fc;
-  --bg-dark: #0f172a;
-  --panel: #ffffff;
-  --panel-dark: #1a2234;
-  --border: #d0d7e2;
-  --border-dark: #2c3a52;
+/* ---------- Palette & radii ---------- */
+:root{
+  /* chiaro */
+  --bg:#f6f8fc;              /* sfondo app */
+  --panel:#ffffff;           /* card/pannelli */
+  --line:#d7deea;            /* bordi */
+  --txt:#1e293b;             /* testo principale */
+  --muted:#64748b;           /* testo attenuato */
 
-  --txt: #1e293b;
-  --txt-dark: #e2e8f0;
+  /* accenti istituzionali */
+  --pri:#2a6eea;             /* blu accademico */
+  --pri-600:#1e5ed0;
+  --ok:#0f8d5e;              /* verde conferma */
+  --ok-600:#0a704b;
+  --err:#b91c1c;             /* rosso correzione */
+  --err-600:#8f1717;
 
-  --muted: #64748b;
-  --muted-dark: #94a3b8;
-
-  --primary: #2a6eea;    /* blu istituzionale */
-  --primary-dark: #3b82f6;
-
-  --ok: #0f8d5e;         /* verde didattico educato */
-  --ok-dark: #10b981;
-
-  --err: #b91c1c;        /* rosso sobrio */
-  --err-dark: #ef4444;
-
-  --chip-bg: #eef3fb;
-  --chip-dark: #0b1220;
-
-  --radius: 14px;
-  --shadow: 0 8px 26px rgba(0,0,0,0.08);
+  --chip:#eef3fb;            /* badge/chip */
+  --shadow:0 10px 28px rgba(16,27,57,.08);
+  --radius:14px;
 }
 
-/* Dark Mode Respect */
-@media(prefers-color-scheme: dark) {
-  :root {
-    --bg: var(--bg-dark);
-    --panel: var(--panel-dark);
-    --border: var(--border-dark);
-    --txt: var(--txt-dark);
-    --muted: var(--muted-dark);
+/* Dark mode auto */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f172a;
+    --panel:#111827;
+    --line:#2a3446;
+    --txt:#e2e8f0;
+    --muted:#94a3b8;
+
+    --pri:#3b82f6;
+    --pri-600:#2f6cce;
+    --ok:#10b981;
+    --ok-600:#0a8f65;
+    --err:#ef4444;
+    --err-600:#c73737;
+
+    --chip:#0b1220;
+    --shadow:0 10px 28px rgba(0,0,0,.35);
   }
 }
 
-/* ===============================
-   BASE
-   =============================== */
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,system-ui,sans-serif;
+  line-height:1.55;
+  padding-bottom:env(safe-area-inset-bottom); /* safe area home indicator */
+}
+.hidden{display:none!important}
 
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--txt);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
-  line-height: 1.5;
+/* Focus visibile (WCAG) */
+:focus-visible{
+  outline:3px solid color-mix(in oklab, var(--pri) 68%, white);
+  outline-offset:2px;border-radius:10px;
 }
 
-.hidden { display: none !important; }
+/* ---------- Layout helpers ---------- */
+.safe-top{padding-top:env(safe-area-inset-top)}
+.safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom) + 12px)}
+.wrap{max-width:940px;margin:0 auto;padding:16px}
+.row{display:flex;gap:12px;align-items:center}
+.space{justify-content:space-between}
+.actions{display:flex;gap:10px;margin-top:12px}
+.center{text-align:center}
+.muted{color:var(--muted)}
 
-/* Safe Areas (iPhone notch) */
-body { padding-bottom: env(safe-area-inset-bottom); }
+/* ---------- Topbar (Large Title) ---------- */
+.topbar{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 16px;
+  background:linear-gradient(180deg, color-mix(in oklab, var(--bg) 94%, #000 6%), var(--bg));
+  border-bottom:1px solid var(--line);
+  backdrop-filter:saturate(120%) blur(6px);
+}
+.title{margin:0;font-size:28px;font-weight:800}
 
-/* ===============================
-   HEADER
-   =============================== */
+/* ---------- Buttons ---------- */
+.btn{
+  border:none;border-radius:var(--radius);
+  padding:12px 18px;font-weight:700;cursor:pointer;
+  transition:background .15s ease,transform .06s ease,border-color .15s ease,color .15s ease;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--pri);color:#fff}
+.btn.primary:hover{background:var(--pri-600)}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.btn.ghost:hover{background:color-mix(in oklab, var(--bg) 85%, var(--pri) 15%)}
+.btn.success{background:var(--ok);color:#fff}
+.btn.success:hover{background:var(--ok-600)}
 
-.topbar {
-  position: sticky;
-  top: 0;
-  padding: 16px;
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* ---------- Cards ---------- */
+.card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:18px;padding:18px;margin:16px;box-shadow:var(--shadow);
+  animation:fadeIn .18s ease-out both;
 }
 
-.title {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--txt);
+/* ---------- Segmented (iOS) ---------- */
+.segmented{
+  display:flex;gap:8px;width:max-content;
+  background:color-mix(in oklab, var(--chip) 92%, white 8%);
+  padding:6px;border:1px solid var(--line);border-radius:16px;
+}
+.segment{
+  padding:10px 16px;border-radius:12px;border:none;background:transparent;
+  color:var(--muted);font-weight:700;cursor:pointer;transition:transform .06s ease,color .15s ease,background .15s ease;
+}
+.segment:hover{color:var(--txt)}
+.segment.active{background:var(--pri);color:#fff}
+
+/* ---------- Progress ---------- */
+.progress{height:8px;background:color-mix(in oklab, var(--chip) 80%, white 20%);
+  border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:10px 0 12px}
+.fill{height:100%;width:0%;background:var(--pri);transition:width .25s ease}
+
+/* ---------- Timer ---------- */
+.timer{
+  position:absolute;right:16px;top:8px;
+  background:color-mix(in oklab, var(--pri) 60%, black 8%);
+  color:#fff;padding:6px 12px;border-radius:999px;font-weight:800;
+  box-shadow:0 6px 16px rgba(0,0,0,.12)
 }
 
-/* ===============================
-   BUTTONS
-   =============================== */
-
-.btn {
-  border: none;
-  border-radius: var(--radius);
-  padding: 12px 18px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 16px;
-  transition: 0.2s;
+/* ---------- Badges/Chips ---------- */
+.badge{background:#e6eefc;border:1px solid var(--line);color:var(--pri);padding:4px 10px;border-radius:999px;font-size:12px}
+.chip{display:inline-block;background:var(--chip);border:1px solid var(--line);color:var(--pri);padding:4px 10px;border-radius:999px;font-size:12px;margin:6px 0}
+@media (prefers-color-scheme: dark){
+  .badge{background:#142037;color:#cfe0ff}
 }
 
-.btn.primary {
-  background: var(--primary);
-  color: #fff;
+/* ---------- Question & Options ---------- */
+.question{font-size:22px;font-weight:800;margin:8px 0 10px}
+.options{display:grid;gap:10px}
+.options button{
+  background:#f9fbfe;border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;font-size:17px;color:var(--txt);text-align:left;cursor:pointer;
+  transition:border-color .15s ease,transform .05s ease,background .15s ease,color .15s ease;
+}
+.options button:hover{border-color:var(--pri)}
+.options button:active{transform:translateY(1px)}
+/* Stati risposta ad alto contrasto */
+.options button.correct{
+  background:var(--ok);border-color:var(--ok-600);color:#fff!important;
+}
+.options button.wrong{
+  background:var(--err);border-color:var(--err-600);color:#fff!important;
+}
+.options button:disabled{opacity:1} /* mantieni leggibilità */
+
+/* Marcatori ✓ / ✗ (facoltativi) */
+.options button.correct::before{content:"✓ ";font-weight:800}
+.options button.wrong::before{content:"✗ ";font-weight:800}
+
+/* ---------- Spiegazione ---------- */
+.explanation{
+  background:var(--chip);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;font-weight:600;margin-top:12px;color:var(--txt)
+}
+@media (prefers-color-scheme: dark){
+  .explanation{background:#0b1729;color:var(--txt)}
 }
 
-.btn.primary:hover { background: #1d5ecb; }
+/* ---------- Statistiche / Griglie ---------- */
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.value{font-size:20px;font-weight:800}
+.label{font-size:12px;color:var(--muted)}
 
-.btn.ghost {
-  background: transparent;
-  color: var(--txt);
-  border: 1px solid var(--border);
+/* ---------- Sheet Impostazioni (bottom sheet) ---------- */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet-content{
+  background:var(--panel);border:1px solid var(--line);border-bottom:0;
+  border-top-left-radius:16px;border-top-right-radius:16px;
+  width:100%;max-width:940px;padding:12px 16px;box-shadow:var(--shadow)
 }
+.sheet-handle{width:56px;height:6px;background:color-mix(in oklab, var(--line) 85%, var(--txt) 15%);border-radius:999px;margin:8px auto 12px}
+.sheet .row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
+.sheet .row:last-child{border-bottom:0}
+.actions.end{justify-content:flex-end}
 
-.btn.ghost:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-/* ===============================
-   CARDS
-   =============================== */
-
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin: 16px;
-  box-shadow: var(--shadow);
-}
-
-/* ===============================
-   SEGMENTED CONTROL (iOS style)
-   =============================== */
-
-.segmented {
-  display: flex;
-  gap: 8px;
-  background: #e3e9f3;
-  padding: 6px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  width: max-content;
-}
-
-.segment {
-  padding: 10px 16px;
-  border-radius: var(--radius);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--muted);
-  transition: 0.2s;
-}
-
-.segment.active {
-  background: var(--primary);
-  color: #fff;
-}
-
-/* ===============================
-   PROGRESS BAR
-   =============================== */
-
-.progress {
-  margin: 12px 0;
-  height: 8px;
-  width: 100%;
-  background: #e5eaf4;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.fill {
-  height: 100%;
-  width: 0%;
-  background: var(--primary);
-  transition: width .3s ease;
-}
-
-/* ===============================
-   QUESTION + OPTIONS
-   =============================== */
-
-.question {
-  font-size: 22px;
-  font-weight: 800;
-  margin: 14px 0;
-}
-
-.options {
-  display: grid;
-  gap: 10px;
-}
-
-.options button {
-  background: #f9fbfe;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px;
-  font-size: 17px;
-  color: var(--txt);
-  text-align: left;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.options button:hover {
-  border-color: var(--primary);
-}
-
-/* Correct / wrong */
-.options button.correct {
-  background: var(--ok);
-  border-color: var(--ok-dark);
-  color: #fff;
-}
-
-.options button.wrong {
-  background: var(--err);
-  border-color: var(--err-dark);
-  color: #fff;
-}
-
-/* ===============================
-   EXPLANATION
-   =============================== */
-
-.explanation {
-  background: var(--chip-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px;
-  font-weight: 600;
-  margin-top: 12px;
-}
-
-/* Dark mode correction */
-@media(prefers-color-scheme: dark){
-  .explanation {
-    background: #0b1729;
-    border-color: var(--border);
-    color: var(--txt);
-  }
-}
-
-/* ===============================
-   BADGES
-   =============================== */
-
-.chip {
-  display: inline-block;
-  background: var(--chip-bg);
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  border: 1px solid var(--border);
-  color: var(--primary);
-}
-
-/* ===============================
-   LAYOUT HELPERS
-   =============================== */
-
-.wrap { max-width: 900px; margin: auto; padding: 16px; }
-.actions { display: flex; gap: 10px; margin-top: 12px; }
-.row { display: flex; justify-content: space-between; align-items: center; }
-.center { text-align: center; }
-.muted { color: var(--muted); }
+/* ---------- Animazioni ---------- */
+@keyframes fadeIn{from{opacity:.0;transform:scale(.995)}to{opacity:1;transform:scale(1)}}
+.enter{animation:fadeIn .18s ease-out both}
