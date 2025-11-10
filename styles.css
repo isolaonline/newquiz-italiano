@@ -1,27 +1,42 @@
-/* Segmented control più leggibile */
-.segmented { display:flex; gap:8px; background:#0b1220; padding:8px; border-radius:14px; border:1px solid #1f2937; width:max-content; }
-.segment { padding:10px 14px; border-radius:10px; border:1px solid #334155; background:#0f172a; color:#e5e7eb; cursor:pointer; font-weight:600; }
-.segment:hover { border-color:#3b82f6; }
-.segment.active { background:#3b82f6; border-color:#3b82f6; color:#fff; }
+:root{
+  --bg:#0f172a; --panel:#111827; --line:#1f2937; --txt:#e5e7eb; --muted:#94a3b8;
+  --pri:#3b82f6; --ok:#10b981; --err:#ef4444; --chip:#0b1220;
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;line-height:1.6}
 
-/* Card e gerarchia */
-.card { padding:18px; background:#111827; border:1px solid #1f2937; border-radius:16px; margin-top:14px; }
-.question { font-size:22px; font-weight:800; margin:14px 0 8px; color:#f8fafc; }
+.topbar{position:sticky;top:0;display:flex;gap:12px;align-items:center;justify-content:space-between;
+  padding:12px 16px;background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(15,23,42,.9));border-bottom:1px solid var(--line)}
+.title{margin:0;font-size:26px;font-weight:800}
+.wrap{max-width:920px;margin:0 auto;padding:18px 16px}
 
-/* Opzioni pulite */
-.options { display:grid; gap:10px; }
-.options button { padding:12px 14px; border-radius:12px; border:1px solid #334155; background:#0f172a; color:#e5e7eb; text-align:left; }
-.options button:hover { border-color:#64748b; }
-.options button.correct { background:#065f46; border-color:#10b981; }
-.options button.wrong   { background:#7f1d1d; border-color:#ef4444; }
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.h{margin:0 0 10px 0;font-size:18px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center}
+.space{justify-content:space-between}
 
-/* Barra progresso */
-.progress-bar { height:8px; background:#0b1220; border:1px solid #1f2937; border-radius:999px; overflow:hidden; margin:10px 0; }
-.fill { height:100%; background:#3b82f6; width:0%; }
+.segmented{display:flex;gap:8px;background:var(--chip);padding:8px;border:1px solid var(--line);border-radius:14px;width:max-content}
+.segment{padding:10px 14px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:var(--txt);font-weight:700;cursor:pointer}
+.segment:hover{border-color:#64748b}
+.segment.active{background:var(--pri);border-color:var(--pri);color:#fff}
 
-/* Chip categoria */
-.chip { display:inline-block; padding:4px 10px; border-radius:999px; background:#0b1220; border:1px solid #334155; color:#93c5fd; font-size:12px; }
+.btn{border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--pri);color:#fff}
+.btn.ghost{background:var(--panel);color:var(--txt);border:1px solid var(--line)}
 
-/* Bottoni primari */
-.btn { padding:12px 16px; border-radius:12px; border:none; cursor:pointer; }
-.btn.primary { background:#3b82f6; color:#fff; font-weight:700; }
+.progress{height:10px;background:#0b1220;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:8px 0 12px 0}
+.fill{height:100%;width:0%;background:var(--pri)}
+
+.badge{background:#1e293b;color:#93c5fd;border:1px solid var(--line);padding:4px 10px;border-radius:999px;font-size:12px}
+.chip{display:inline-block;background:var(--chip);border:1px solid var(--line);color:#93c5fd;padding:4px 10px;border-radius:999px;font-size:12px;margin:6px 0}
+.question{font-size:24px;font-weight:800;margin:8px 0 10px}
+.options{display:grid;gap:10px}
+.options button{padding:12px 14px;background:#0f172a;border:1px solid #334155;border-radius:12px;color:var(--txt);text-align:left;cursor:pointer}
+.options button:hover{border-color:#64748b}
+.options button.correct{background:#06241a;border-color:var(--ok)}
+.options button.wrong{background:#2a0b0b;border-color:var(--err)}
+
+.explanation{margin-top:12px;background:#0b1220;border:1px solid var(--line);padding:12px;border-radius:12px;color:#cbd5e1}
+.score{font-size:22px;font-weight:800}
+.actions{display:flex;gap:10px;margin-top:12px}
