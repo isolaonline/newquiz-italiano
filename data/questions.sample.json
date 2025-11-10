@@ -1,39 +1,42 @@
 {
-  "version": 1,
-  "medie": [
-    {"id":"m1","q":"Participio passato di 'rompere'?","opts":["Romputo","Rotto","Rompato"],"ans":1,"exp":"'Rotto' è la forma corretta (irregolare).","cat":"Grammatica"},
-    {"id":"m2","q":"\"La mela\" in \"Luca mangia la mela\" è:","opts":["Soggetto","Complemento oggetto","Predicato"],"ans":1,"exp":"Risponde a 'che cosa?': complemento oggetto.","cat":"Analisi logica"},
-    {"id":"m3","q":"Sinonimo di 'effimero':","opts":["Duraturo","Breve","Solido"],"ans":1,"exp":"Effimero = di breve durata.","cat":"Lessico"},
-    {"id":"m4","q":"Accento giusto in 'perché':","opts":["Grave","Acutò","Acuto"],"ans":2,"exp":"È 'é' (acuto).","cat":"Ortografia"},
-    {"id":"m5","q":"Plurale tecnico: i ____ della poltrona","opts":["bracci","braccia","braccie"],"ans":0,"exp":"In senso tecnico/figurato si usa 'bracci'.","cat":"Morfologia"},
-    {"id":"m6","q":"Il comparativo di maggioranza di 'bello' è:","opts":["Più bello","Bellissimo","Bello più"],"ans":0,"exp":"Comparativo: 'più' + aggettivo.","cat":"Grammatica"},
-    {"id":"m7","q":"Qual è il femminile di 'attore'?","opts":["Attrice","Attora","Attoressa"],"ans":0,"exp":"Forma corretta: attrice.","cat":"Morfologia"},
-    {"id":"m8","q":"Il contrario di 'avaro' è:","opts":["Taccagno","Prodigo","Avido"],"ans":1,"exp":"'Prodigo' = generoso, dispendioso.","cat":"Lessico"},
-    {"id":"m9","q":"Il verbo in 'Ieri ho corso' è al:","opts":["Passato remoto","Passato prossimo","Imperfetto"],"ans":1,"exp":"'Ho corso' = passato prossimo.","cat":"Tempi verbali"},
-    {"id":"m10","q":"'Il cane che abbaia' contiene una:","opts":["Proposizione causale","Proposizione relativa","Interrogativa indiretta"],"ans":1,"exp":"'che abbaia' dipende da 'cane' → relativa.","cat":"Sintassi"}
-  ],
-  "licei": [
-    {"id":"l1","q":"'Silenzio assordante' è:","opts":["Metafora","Ossimoro","Iperbole"],"ans":1,"exp":"Accosta termini opposti → ossimoro.","cat":"Figure retoriche"},
-    {"id":"l2","q":"Autore dei 'Sepolcri':","opts":["Ugo Foscolo","Giacomo Leopardi","A. Manzoni"],"ans":0,"exp":"Carme pubblicato nel 1807.","cat":"Letteratura"},
-    {"id":"l3","q":"Congiuntivo imperfetto, 1ª plurale di 'andare':","opts":["Andassimo","Andremo","Andammo"],"ans":0,"exp":"'Che noi andassimo'.","cat":"Verbo"},
-    {"id":"l4","q":"Figura: 'il dolce suono scuro'","opts":["Sinestesia","Allitterazione","Metonimia"],"ans":0,"exp":"Incrocia sensi diversi.","cat":"Figure retoriche"},
-    {"id":"l5","q":"La relativa introdotta da 'che' può essere:","opts":["Solo soggetto","Solo oggetto","Soggetto o oggetto"],"ans":2,"exp":"Dipende dal contesto.","cat":"Sintassi"},
-    {"id":"l6","q":"Il 'realismo' ottocentesco mira a:","opts":["Evasione fantastica","Rappresentazione del vero","Simbolismo puro"],"ans":1,"exp":"Centralità del quotidiano verosimile.","cat":"Storia letteratura"},
-    {"id":"l7","q":"Il complementare di 'tema' è:","opts":["Rematico","Tematico","Rematico (re)"],"ans":0,"exp":"Tema/rema nella linguistica del testo.","cat":"Linguistica testuale"},
-    {"id":"l8","q":"'Chi dorme non piglia pesci' è:","opts":["Metonimia","Proverbio","Adynaton"],"ans":1,"exp":"Frase sentenziosa comune: proverbio.","cat":"Fraseologia"},
-    {"id":"l9","q":"Endecasillabo piani: l’accento principale è sulla:","opts":["10ª sillaba","11ª sillaba","9ª sillaba"],"ans":0,"exp":"Verso piano: accento sulla 10ª.","cat":"Metrica"},
-    {"id":"l10","q":"'Infinito' di Leopardi appartiene al:","opts":["Neoclassicismo","Romanticismo","Decadentismo"],"ans":1,"exp":"Poetica romantica dell’indefinito.","cat":"Letteratura"}
-  ],
-  "universita": [
-    {"id":"u1","q":"Diatesi media in italiano è:","opts":["Produttiva","Non produttiva","Limitata a verbi pronominali"],"ans":2,"exp":"Realizzata in costruzioni pronominali a valore medio.","cat":"Linguistica"},
-    {"id":"u2","q":"In 'si dice che', 'si' è:","opts":["Riflessivo","Impersonale","Passivante"],"ans":1,"exp":"Marca impersonalità.","cat":"Sintassi"},
-    {"id":"u3","q":"Periodo ipotetico dell'irrealtà:","opts":["Ind. pres.+fut.","Cong. impf.+Cond. pass.","Cong. pres.+Cond. pres."],"ans":1,"exp":"Protasi cong. imperfetto, apodosi cond. passato.","cat":"Periodo ipotetico"},
-    {"id":"u4","q":"'Allotropia' (ling.):","opts":["Variazione fonetica di un morfo","Prestito non adattato","Raddoppiamento sintattico"],"ans":0,"exp":"Allomorfi di uno stesso morfema.","cat":"Morfologia"},
-    {"id":"u5","q":"Istanza enunciante:","opts":["Narratore implicito","Autore empirico","Voce extradiegetica"],"ans":0,"exp":"Figura che emette l’enunciazione.","cat":"Narratologia"},
-    {"id":"u6","q":"Funzione fàtica (Jakobson) ha scopo di:","opts":["Trasmettere info","Mantenere il canale","Esprimere emotività"],"ans":1,"exp":"Verifica/mantenimento contatto comunicativo.","cat":"Linguistica"},
-    {"id":"u7","q":"Deissi personale indica:","opts":["Luoghi","Tempi","Partecipanti"],"ans":2,"exp":"Io/tu/egli; centrata sul parlante.","cat":"Pragmatica"},
-    {"id":"u8","q":"'Clitico' è:","opts":["Morfema libero","Morfema legato fonologicamente","Suffisso nominale"],"ans":1,"exp":"Dipende prosodicamente da un ospite.","cat":"Morfologia"},
-    {"id":"u9","q":"'Tema marcato' è:","opts":["Tema neutro","Tema in posizione non canonica","Tema assente"],"ans":1,"exp":"Dislocazioni/enfasi informazionale.","cat":"Linguistica testuale"},
-    {"id":"u10","q":"Fenomeno 'pro-drop' in italiano:","opts":["Obbligo del soggetto","Soggetto omissibile","Assenza di pronomi"],"ans":1,"exp":"Soggetto può essere sottinteso per flessione.","cat":"Sintassi"}
+  "version": "sample-2025-11",
+  "questions": [
+    {
+      "id": 1,
+      "level": "medie",
+      "text": "Qual è il plurale di 'città'?",
+      "correct": "città",
+      "incorrect": ["cittàs", "citti", "cittade"],
+      "explanation": "Il sostantivo 'città' è invariabile al plurale.",
+      "category": "grammatica"
+    },
+    {
+      "id": 2,
+      "level": "medie",
+      "text": "Come si scrive correttamente?",
+      "correct": "Un'ora",
+      "incorrect": ["Un ora", "Un' ora", "Unhora"],
+      "explanation": "L'apostrofo è obbligatorio davanti a vocale.",
+      "category": "ortografia"
+    },
+    {
+      "id": 3,
+      "level": "licei",
+      "text": "Chi ha scritto 'I Promessi Sposi'?",
+      "correct": "Alessandro Manzoni",
+      "incorrect": ["Giacomo Leopardi", "Ugo Foscolo", "Dante Alighieri"],
+      "explanation": "Pubblicato nel 1827 (prima versione 1825-27).",
+      "category": "letteratura"
+    },
+    {
+      "id": 4,
+      "level": "universita",
+      "text": "Quale poeta appartiene alla corrente dell'Ermetismo?",
+      "correct": "Eugenio Montale",
+      "incorrect": ["Gabriele D'Annunzio", "Giovanni Pascoli", "Giuseppe Ungaretti"],
+      "explanation": "Montale, Quasimodo e Ungaretti sono i tre grandi ermetici, ma Montale è il più rappresentativo.",
+      "category": "letteratura"
+    }
+    /* ... aggiungi altre 26 domande (10 per livello) ... */
   ]
 }
