@@ -218,3 +218,38 @@ function loadSettings(){
 function saveSettings(){ localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings)); }
 function loadLast20(){ try{ return JSON.parse(localStorage.getItem(STORAGE_LAST20)||'[]'); }catch{return [];} }
 function saveLast20(ids){ localStorage.setItem(STORAGE_LAST20, JSON.stringify(ids||[])); }
+// ===== RESET HARD (funziona sempre) =====
+window.resetGame = function () {
+  try { clearInterval(timer); } catch (e) {}
+  lifelineUsed = false;
+  hiddenOptions = [];
+  idx = 0; score = 0;
+
+  // pulizia UI
+  els.explanation?.classList.add('hidden');
+  els.btnNext?.classList.add('hidden');
+
+  // torna alla schermata iniziale
+  els.quiz?.classList.add('hidden');
+  els.results?.classList.add('hidden');
+  els.intro?.classList.remove('hidden');
+
+  // riattiva eventuali opzioni rimaste disabilitate
+  document.querySelectorAll('#options button')
+    .forEach(b => b && (b.disabled = false, b.classList.remove('correct','wrong')));
+};
+
+// collega anche via JS (oltre all'onclick in HTML)
+document.getElementById('btnNewGame')?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.resetGame();
+});
+document.getElementById('btnQuit')?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.resetGame();
+});
+document.getElementById('btnHome')?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.resetGame();
+});
+
