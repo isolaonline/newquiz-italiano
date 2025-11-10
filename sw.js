@@ -1,4 +1,4 @@
-const CACHE_NAME = 'QUIZ_IT_v1';
+const CACHE_NAME = 'QUIZ_IT_v3';
 const PRECACHE = [
   './',
   './index.html',
