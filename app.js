@@ -63,18 +63,36 @@ function setupEventListeners() {
 
 async function loadQuestions() {
   try {
-    const res = await fetch('data/questions.sample.json?v=' + Date.now());
+    // Forza bypass cache solo per sviluppo → rimuovi ?v=… in produzione
+    const res = await fetch('data/questions.sample.json?t=' + Date.now());
+    if (!res.ok) throw new Error();
     const data = await res.json();
-    STATE.questions = data.questions.filter(q => q.level === STATE.level);
-    const saved = localStorage.getItem('quiz-used-' + data.version);
-    if (saved) STATE.usedIds = JSON.parse(saved);
-  } catch (e) {
+    await cacheData(data); // salva in cache manualmente
+    applyQuestions(data);
+  } catch (err) {
+    // Prova a leggere dalla cache del SW
     const cached = await caches.match('data/questions.sample.json');
     if (cached) {
       const data = await cached.json();
-      STATE.questions = data.questions.filter(q => q.level === STATE.level);
+      applyQuestions(data);
+    } else {
+      showScreen('offline');
     }
   }
+}
+
+function applyQuestions(data) {
+  STATE.questions = data.questions.filter(q => q.level === STATE.level);
+  const saved = localStorage.getItem('quiz-used-' + data.version);
+  if (saved) STATE.usedIds = JSON.parse(saved);
+  showScreen('home'); // esce dall'offline se aveva dati
+}
+
+async function cacheData(data) {
+  const cache = await caches.open('quiz-data-v1');
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  const response = new Response(blob, { headers: { 'Content-Type': 'application/json' } });
+  await cache.put('data/questions.sample.json', response);
 }
 
 function startQuiz() {
