@@ -1,53 +1,64 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Quiz Italiano</title>
-  <meta name="theme-color" content="#0f172a">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Quiz Italiano">
-  <link rel="stylesheet" href="./styles.css">
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
-<body class="dark safe-top safe-bottom">
-  <header class="app-header">
-    <h1 class="large-title">Quiz Italiano</h1>
-    <div class="segmented">
-      <button class="segment active" data-level="medie">Medie</button>
-      <button class="segment" data-level="licei">Licei</button>
-      <button class="segment" data-level="universita">Università</button>
-    </div>
+<body>
+  <header class="topbar">
+    <h1 class="title">Quiz Italiano</h1>
+    <button id="btnHome" class="btn ghost" aria-label="Nuova partita">↺ Nuova partita</button>
   </header>
 
-  <main id="content">
+  <main class="wrap">
+    <!-- Intro -->
     <section id="intro" class="card">
-      <p>Seleziona un livello e avvia il quiz (20 domande).</p>
-      <button id="btnStart" class="btn primary">Avvia</button>
+      <h2 class="h">Scegli il livello</h2>
+      <div class="segmented" role="tablist" aria-label="Livello">
+        <button class="segment active" data-level="medie" role="tab" aria-selected="true">Medie</button>
+        <button class="segment" data-level="licei" role="tab" aria-selected="false">Licei</button>
+        <button class="segment" data-level="universita" role="tab" aria-selected="false">Università</button>
+      </div>
+      <p class="muted">Partita da <strong>20</strong> domande (o meno, se il livello ne ha di meno). Dopo ogni risposta compare la spiegazione.</p>
+      <div class="actions">
+        <button id="btnStart" class="btn primary">Avvia</button>
+      </div>
     </section>
 
-    <section id="quiz" class="hidden">
-      <div id="qIndex"></div>
-      <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    <!-- Quiz -->
+    <section id="quiz" class="card hidden">
+      <div class="row space">
+        <div id="qIndex" class="muted"></div>
+        <div id="levelBadge" class="badge"></div>
+      </div>
+      <div class="progress"><div id="progressFill" class="fill"></div></div>
+
       <div id="category" class="chip"></div>
       <div id="question" class="question"></div>
       <div id="options" class="options"></div>
+
       <div id="explanation" class="explanation hidden"></div>
-      <button id="btnNext" class="btn primary hidden">Prossima</button>
+      <div class="actions">
+        <button id="btnNext" class="btn primary hidden">Prossima</button>
+        <button id="btnQuit" class="btn ghost">Esci</button>
+      </div>
     </section>
 
-    <section id="results" class="hidden card">
-      <h2>Fine quiz</h2>
-      <div id="percent"></div>
-      <button id="btnNewGame" class="btn primary">Rigioca</button>
+    <!-- Risultati -->
+    <section id="results" class="card hidden">
+      <h2 class="h">Risultato</h2>
+      <p id="percent" class="score"></p>
+      <div class="actions">
+        <button id="btnNewGame" class="btn primary">Nuova partita</button>
+      </div>
     </section>
   </main>
 
   <script src="./app.js"></script>
-  <script>
-  if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js'); }
-  </script>
 </body>
 </html>
