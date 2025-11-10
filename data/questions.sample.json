@@ -1,42 +1,249 @@
 {
-  "version": "sample-2025-11",
-  "questions": [
+  "version": 1,
+  "medie": [
     {
-      "id": 1,
-      "level": "medie",
-      "text": "Qual è il plurale di 'città'?",
-      "correct": "città",
-      "incorrect": ["cittàs", "citti", "cittade"],
-      "explanation": "Il sostantivo 'città' è invariabile al plurale.",
-      "category": "grammatica"
+      "id": "m1",
+      "category": "Grammatica",
+      "text": "Quale di queste è una congiunzione?",
+      "options": ["bello", "e", "cane"],
+      "answer": 1,
+      "explain": "‘E’ collega due parole o frasi: è una congiunzione coordinante."
     },
     {
-      "id": 2,
-      "level": "medie",
-      "text": "Come si scrive correttamente?",
-      "correct": "Un'ora",
-      "incorrect": ["Un ora", "Un' ora", "Unhora"],
-      "explanation": "L'apostrofo è obbligatorio davanti a vocale.",
-      "category": "ortografia"
+      "id": "m2",
+      "category": "Lessico",
+      "text": "Cosa significa 'albergare'?",
+      "options": ["costruire", "ospitare", "partire"],
+      "answer": 1,
+      "explain": "Albergare = dare alloggio, ospitare."
     },
     {
-      "id": 3,
-      "level": "licei",
-      "text": "Chi ha scritto 'I Promessi Sposi'?",
-      "correct": "Alessandro Manzoni",
-      "incorrect": ["Giacomo Leopardi", "Ugo Foscolo", "Dante Alighieri"],
-      "explanation": "Pubblicato nel 1827 (prima versione 1825-27).",
-      "category": "letteratura"
+      "id": "m3",
+      "category": "Verbi",
+      "text": "Indica la forma corretta: io _____ un libro.",
+      "options": ["leggo", "leggi", "legge"],
+      "answer": 0,
+      "explain": "La prima persona singolare del verbo leggere è 'leggo'."
     },
     {
-      "id": 4,
-      "level": "universita",
-      "text": "Quale poeta appartiene alla corrente dell'Ermetismo?",
-      "correct": "Eugenio Montale",
-      "incorrect": ["Gabriele D'Annunzio", "Giovanni Pascoli", "Giuseppe Ungaretti"],
-      "explanation": "Montale, Quasimodo e Ungaretti sono i tre grandi ermetici, ma Montale è il più rappresentativo.",
-      "category": "letteratura"
+      "id": "m4",
+      "category": "Punteggiatura",
+      "text": "Quale segno va tra le parti di un'enumerazione?",
+      "options": ["punto", "virgola", "punto esclamativo"],
+      "answer": 1,
+      "explain": "La virgola separa gli elementi di un elenco semplice."
+    },
+    {
+      "id": "m5",
+      "category": "Lessico",
+      "text": "Qual è il contrario di 'lucido'?",
+      "options": ["opaco", "chiaro", "trasparente"],
+      "answer": 0,
+      "explain": "Lucido = che riflette la luce; opaco = che non la riflette."
+    },
+    {
+      "id": "m6",
+      "category": "Grammatica",
+      "text": "Quale articolo si usa prima di 'zaino'?",
+      "options": ["lo", "il", "la"],
+      "answer": 0,
+      "explain": "Lo si usa davanti a parole che iniziano per z, s+consonante, ps, gn, ecc."
+    },
+    {
+      "id": "m7",
+      "category": "Lessico",
+      "text": "Cosa si fa con una 'forbice'?",
+      "options": ["scrivere", "tagliare", "disegnare"],
+      "answer": 1,
+      "explain": "La forbice serve per tagliare."
+    },
+    {
+      "id": "m8",
+      "category": "Verbi",
+      "text": "Quale verbo è al passato remoto?",
+      "options": ["corro", "correvo", "corsi"],
+      "answer": 2,
+      "explain": "Corsi è la prima persona singolare del passato remoto di correre."
+    },
+    {
+      "id": "m9",
+      "category": "Lessico",
+      "text": "Quale parola indica un tipo di poesia?",
+      "options": ["sonetto", "sasso", "tavolo"],
+      "answer": 0,
+      "explain": "Il sonetto è una forma chiusa di poesia di 14 versi."
+    },
+    {
+      "id": "m10",
+      "category": "Grammatica",
+      "text": "Quale è un aggettivo?",
+      "options": ["casa", "alto", "libro"],
+      "answer": 1,
+      "explain": "Alto qualifica un nome: è un aggettivo."
     }
-    /* ... aggiungi altre 26 domande (10 per livello) ... */
+  ],
+  "licei": [
+    {
+      "id": "l1",
+      "category": "Stilistica",
+      "text": "Che figura retorica è 'coraggio, non ti temo'?",
+      "options": ["metafora", "apostrofe", "similitudine"],
+      "answer": 1,
+      "explain": "Apostrofe: ci si rivolge direttamente a un concetto astratto."
+    },
+    {
+      "id": "l2",
+      "category": "Metrica",
+      "text": "Quanti versi ha una quartina?",
+      "options": ["3", "4", "5"],
+      "answer": 1,
+      "explain": "La quartina è una strofa di 4 versi."
+    },
+    {
+      "id": "l3",
+      "category": "Filologia",
+      "text": "Il toscano diventa lingua nazionale grazie a:",
+      "options": ["Dante", "Manzoni", "Leopardi"],
+      "answer": 0,
+      "explain": "Dante fissa il modello letterario toscano nel Duecento."
+    },
+    {
+      "id": "l4",
+      "category": "Analisi logica",
+      "text": "Nella frase 'Il libro rosso è sul tavolo' quanti complementi ci sono?",
+      "options": ["0", "1", "2"],
+      "answer": 1,
+      "explain": "È presente solo il complemento di luogo 'sul tavolo'."
+    },
+    {
+      "id": "l5",
+      "category": "Etimologia",
+      "text": "Da quale lingua deriva 'panorama'?",
+      "options": ["greco", "latino", "francese"],
+      "answer": 0,
+      "explain": "Pan (tutto) + horama (vista) → greco."
+    },
+    {
+      "id": "l6",
+      "category": "Sintassi",
+      "text": "Quale proposizione è subordinata relativa?",
+      "options": ["Mi piace che tu canti", "Il ragazzo che hai visto", "Se vieni, esco"],
+      "answer": 1,
+      "explain": "Che hai visto modifica il nome 'ragazzo'."
+    },
+    {
+      "id": "l7",
+      "category": "Lessico",
+      "text": "Quale parola è un iperonimo di 'cane'?",
+      "options": ["animale", "barboncino", "cuccia"],
+      "answer": 0,
+      "explain": "Animale è un termine più generale."
+    },
+    {
+      "id": "l8",
+      "category": "Grammatica storica",
+      "text": "Il plurale 'uomini' è:",
+      "options": ["regolare", "irregolare", "invariabile"],
+      "answer": 1,
+      "explain": "Deriva dal latino homines, con alterazione della radice."
+    },
+    {
+      "id": "l9",
+      "category": "Semantica",
+      "text": "Cosa indica la denotazione?",
+      "options": ["Il significato affettivo", "Il significato oggettivo", "Il significante"],
+      "answer": 1,
+      "explain": "Denotazione = significato letterale, oggettivo."
+    },
+    {
+      "id": "l10",
+      "category": "Analisi del periodo",
+      "text": "Quale è una proposizione causale?",
+      "options": ["Poiché piove, resto a casa", "Resto a casa, benché piova", "Piove e resto a casa"],
+      "answer": 0,
+      "explain": "Poiché introduce la causa."
+    }
+  ],
+  "università": [
+    {
+      "id": "u1",
+      "category": "Sociolinguistica",
+      "text": "Che cos'è il code-switching?",
+      "options": ["Alternanza tra dialetti/lingue in una conversazione", "Cambio di canale TV", "Errore di codice"],
+      "answer": 0,
+      "explain": "È il passaggio da una lingua all'altra all'interno dello stesso enunciato."
+    },
+    {
+      "id": "u2",
+      "category": "Fonologia",
+      "text": "In quanti modi si può realizzare foneticamente la /r/ in italiano?",
+      "options": ["1", "2", "3+"],
+      "answer": 2,
+      "explain": "Vibrante semplice, vibrante multipla, approximante, ecc."
+    },
+    {
+      "id": "u3",
+      "category": "Storia della lingua",
+      "text": "Il Vocabolario degli Accademici della Crusca è del:",
+      "options": ["1500", "1612", "1861"],
+      "answer": 1,
+      "explain": "Prima edizione 1612."
+    },
+    {
+      "id": "u4",
+      "category": "Pragmatica",
+      "text": "Che cos'è l'implicatura conversazionale?",
+      "options": ["Un tipo di fallacia", "Il significato implicitato dalle massime di Grice", "Un sinonimo"],
+      "answer": 1,
+      "explain": "È ciò che il parlare lascia intendere ma non dice esplicitamente."
+    },
+    {
+      "id": "u5",
+      "category": "Linguistica teorica",
+      "text": "Il principio di economia di Zipf afferma:",
+      "options": ["Le parole corte sono più frequenti", "Le lingue cambiano", "Tutti i sinonimi sono uguali"],
+      "answer": 0,
+      "explain": "Frequenza ed economia determinano la lunghezza delle parole."
+    },
+    {
+      "id": "u6",
+      "category": "Semiotica",
+      "text": "Chi ha introdotto la distinzione significante/significato?",
+      "options": ["Saussure", "Peirce", "Barthes"],
+      "answer": 0,
+      "explain": "Ferdinand de Saussure, corso di linguistica generale."
+    },
+    {
+      "id": "u7",
+      "category": "Tipologia testuale",
+      "text": "Una lettera di reclamo è principalmente:",
+      "options": ["narrativa", "argomentativa", "espositiva"],
+      "answer": 1,
+      "explain": "Mira a convincere l'interlocutore a rimediare."
+    },
+    {
+      "id": "u8",
+      "category": "Neolinguistica",
+      "text": "Da quale lingua viene il neologismo 'chat'?",
+      "options": ["francese", "inglese", "arabo"],
+      "answer": 1,
+      "explain": "To have a chat → conversazione informale."
+    },
+    {
+      "id": "u9",
+      "category": "Lessicologia",
+      "text": "Cosa si intende per 'campo lessicale'?",
+      "options": ["Insieme di parole legate semanticamente", "Un terreno di calcio", "Un sinonimo"],
+      "answer": 0,
+      "explain": "Es. campo semantico 'mezzi di trasporto'."
+    },
+    {
+      "id": "u10",
+      "category": "Politolinguistica",
+      "text": "Che cos'è la political correctness nel linguaggio?",
+      "options": ["Tesi di laurea", "Adattamento lessicale per evitare offese", "Correttezza grammaticale"],
+      "answer": 1,
+      "explain": "Es. 'diversamente abile' invece di 'handicappato'."
+    }
   ]
 }
