@@ -1,193 +1,191 @@
-/* =========================================
-   QUIZ ITALIANO — STYLES (istituzionale / iOS-like)
-   ========================================= */
-
-/* ---------- Palette & radii ---------- */
-:root{
-  /* chiaro */
-  --bg:#f6f8fc;              /* sfondo app */
-  --panel:#ffffff;           /* card/pannelli */
-  --line:#d7deea;            /* bordi */
-  --txt:#1e293b;             /* testo principale */
-  --muted:#64748b;           /* testo attenuato */
-
-  /* accenti istituzionali */
-  --pri:#2a6eea;             /* blu accademico */
-  --pri-600:#1e5ed0;
-  --ok:#0f8d5e;              /* verde conferma */
-  --ok-600:#0a704b;
-  --err:#b91c1c;             /* rosso correzione */
-  --err-600:#8f1717;
-
-  --chip:#eef3fb;            /* badge/chip */
-  --shadow:0 10px 28px rgba(16,27,57,.08);
-  --radius:14px;
+/* iOS-like reset + SF Pro */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  background: #0f172a;
+  color: #f1f5f9;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+@media (prefers-color-scheme: light) {
+  body { background: #f8f9fa; color: #1e293b; }
 }
 
-/* Dark mode auto */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0f172a;
-    --panel:#111827;
-    --line:#2a3446;
-    --txt:#e2e8f0;
-    --muted:#94a3b8;
-
-    --pri:#3b82f6;
-    --pri-600:#2f6cce;
-    --ok:#10b981;
-    --ok-600:#0a8f65;
-    --err:#ef4444;
-    --err-600:#c73737;
-
-    --chip:#0b1220;
-    --shadow:0 10px 28px rgba(0,0,0,.35);
-  }
+/* Safe areas */
+.safe-top { height: env(safe-area-inset-top); background: rgba(15,23,42,0.8); backdrop-filter: blur(20px); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+.safe-bottom { height: env(safe-area-inset-bottom); background: rgba(15,23,42,0.8); backdrop-filter: blur(20px); position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; }
+@media (prefers-color-scheme: light) {
+  .safe-top, .safe-bottom { background: rgba(248,249,250,0.8); }
 }
 
-/* ---------- Base ---------- */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;background:var(--bg);color:var(--txt);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,system-ui,sans-serif;
-  line-height:1.55;
-  padding-bottom:env(safe-area-inset-bottom); /* safe area home indicator */
-}
-.hidden{display:none!important}
+/* Layout */
+#app { min-height: 100dvh; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+.screen { position: fixed; inset: 0; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+.screen.active { opacity: 1; pointer-events: auto; }
 
-/* Focus visibile (WCAG) */
-:focus-visible{
-  outline:3px solid color-mix(in oklab, var(--pri) 68%, white);
-  outline-offset:2px;border-radius:10px;
-}
-
-/* ---------- Layout helpers ---------- */
-.safe-top{padding-top:env(safe-area-inset-top)}
-.safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom) + 12px)}
-.wrap{max-width:940px;margin:0 auto;padding:16px}
-.row{display:flex;gap:12px;align-items:center}
-.space{justify-content:space-between}
-.actions{display:flex;gap:10px;margin-top:12px}
-.center{text-align:center}
-.muted{color:var(--muted)}
-
-/* ---------- Topbar (Large Title) ---------- */
-.topbar{
-  position:sticky;top:0;z-index:30;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:14px 16px;
-  background:linear-gradient(180deg, color-mix(in oklab, var(--bg) 94%, #000 6%), var(--bg));
-  border-bottom:1px solid var(--line);
-  backdrop-filter:saturate(120%) blur(6px);
-}
-.title{margin:0;font-size:28px;font-weight:800}
-
-/* ---------- Buttons ---------- */
-.btn{
-  border:none;border-radius:var(--radius);
-  padding:12px 18px;font-weight:700;cursor:pointer;
-  transition:background .15s ease,transform .06s ease,border-color .15s ease,color .15s ease;
-  user-select:none;-webkit-tap-highlight-color:transparent;
-}
-.btn:active{transform:translateY(1px)}
-.btn.primary{background:var(--pri);color:#fff}
-.btn.primary:hover{background:var(--pri-600)}
-.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
-.btn.ghost:hover{background:color-mix(in oklab, var(--bg) 85%, var(--pri) 15%)}
-.btn.success{background:var(--ok);color:#fff}
-.btn.success:hover{background:var(--ok-600)}
-
-/* ---------- Cards ---------- */
-.card{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:18px;padding:18px;margin:16px;box-shadow:var(--shadow);
-  animation:fadeIn .18s ease-out both;
+/* Typography */
+.large-title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #60a5fa, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ---------- Segmented (iOS) ---------- */
-.segmented{
-  display:flex;gap:8px;width:max-content;
-  background:color-mix(in oklab, var(--chip) 92%, white 8%);
-  padding:6px;border:1px solid var(--line);border-radius:16px;
+/* Segmented Control iOS */
+.segmented-control {
+  display: flex;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 3rem;
+  backdrop-filter: blur(10px);
 }
-.segment{
-  padding:10px 16px;border-radius:12px;border:none;background:transparent;
-  color:var(--muted);font-weight:700;cursor:pointer;transition:transform .06s ease,color .15s ease,background .15s ease;
+.seg {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: #94a3b8;
 }
-.segment:hover{color:var(--txt)}
-.segment.active{background:var(--pri);color:#fff}
-
-/* ---------- Progress ---------- */
-.progress{height:8px;background:color-mix(in oklab, var(--chip) 80%, white 20%);
-  border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:10px 0 12px}
-.fill{height:100%;width:0%;background:var(--pri);transition:width .25s ease}
-
-/* ---------- Timer ---------- */
-.timer{
-  position:absolute;right:16px;top:8px;
-  background:color-mix(in oklab, var(--pri) 60%, black 8%);
-  color:#fff;padding:6px 12px;border-radius:999px;font-weight:800;
-  box-shadow:0 6px 16px rgba(0,0,0,.12)
+.seg.active {
+  background: white;
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-
-/* ---------- Badges/Chips ---------- */
-.badge{background:#e6eefc;border:1px solid var(--line);color:var(--pri);padding:4px 10px;border-radius:999px;font-size:12px}
-.chip{display:inline-block;background:var(--chip);border:1px solid var(--line);color:var(--pri);padding:4px 10px;border-radius:999px;font-size:12px;margin:6px 0}
-@media (prefers-color-scheme: dark){
-  .badge{background:#142037;color:#cfe0ff}
+@media (prefers-color-scheme: light) {
+  .segmented-control { background: rgba(0,0,0,0.08); }
+  .seg.active { background: #0f172a; color: white; }
 }
 
-/* ---------- Question & Options ---------- */
-.question{font-size:22px;font-weight:800;margin:8px 0 10px}
-.options{display:grid;gap:10px}
-.options button{
-  background:#f9fbfe;border:1px solid var(--line);border-radius:var(--radius);
-  padding:14px;font-size:17px;color:var(--txt);text-align:left;cursor:pointer;
-  transition:border-color .15s ease,transform .05s ease,background .15s ease,color .15s ease;
+/* Buttons */
+.primary-btn, .secondary-btn {
+  padding: 14px 32px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0.5rem;
+  min-height: 48px;
+  transition: all 0.2s ease;
 }
-.options button:hover{border-color:var(--pri)}
-.options button:active{transform:translateY(1px)}
-/* Stati risposta ad alto contrasto */
-.options button.correct{
-  background:var(--ok);border-color:var(--ok-600);color:#fff!important;
+.primary-btn {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.4);
 }
-.options button.wrong{
-  background:var(--err);border-color:var(--err-600);color:#fff!important;
+.secondary-btn {
+  background: rgba(255,255,255,0.15);
+  color: #e2e8f0;
+  backdrop-filter: blur(10px);
 }
-.options button:disabled{opacity:1} /* mantieni leggibilità */
+.primary-btn:active, .secondary-btn:active { transform: scale(0.96); }
 
-/* Marcatori ✓ / ✗ (facoltativi) */
-.options button.correct::before{content:"✓ ";font-weight:800}
-.options button.wrong::before{content:"✗ ";font-weight:800}
-
-/* ---------- Spiegazione ---------- */
-.explanation{
-  background:var(--chip);border:1px solid var(--line);border-radius:var(--radius);
-  padding:14px;font-weight:600;margin-top:12px;color:var(--txt)
+/* Switch iOS */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 31px;
+  margin: 1rem 0;
 }
-@media (prefers-color-scheme: dark){
-  .explanation{background:#0b1729;color:var(--txt)}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #475569;
+  transition: .4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 27px;
+  width: 27px;
+  left: 2px;
+  bottom: 2px;
+  background: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider { background: #10b981; }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Quiz UI */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 17px;
+  margin-bottom: 2rem;
+}
+#timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+#question {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+}
+#options {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+.option {
+  padding: 18px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 16px;
+  font-size: 18px;
+  text-align: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.option.correct { background: #10b981; transform: scale(1.03); }
+.option.wrong { background: #ef4444; }
+.option:active { transform: scale(0.97); }
+
+/* Feedback */
+#feedback {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  max-width: 500px;
+  animation: fadeIn 0.5s ease;
 }
 
-/* ---------- Statistiche / Griglie ---------- */
-.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.stat{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
-.value{font-size:20px;font-weight:800}
-.label{font-size:12px;color:var(--muted)}
-
-/* ---------- Sheet Impostazioni (bottom sheet) ---------- */
-.sheet{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;z-index:50}
-.sheet-content{
-  background:var(--panel);border:1px solid var(--line);border-bottom:0;
-  border-top-left-radius:16px;border-top-right-radius:16px;
-  width:100%;max-width:940px;padding:12px 16px;box-shadow:var(--shadow)
+/* Result */
+.result-card {
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  margin: 2rem 0;
 }
-.sheet-handle{width:56px;height:6px;background:color-mix(in oklab, var(--line) 85%, var(--txt) 15%);border-radius:999px;margin:8px auto 12px}
-.sheet .row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
-.sheet .row:last-child{border-bottom:0}
-.actions.end{justify-content:flex-end}
+.score { font-size: 64px; font-weight: 700; margin: 0.5rem 0; }
 
-/* ---------- Animazioni ---------- */
-@keyframes fadeIn{from{opacity:.0;transform:scale(.995)}to{opacity:1;transform:scale(1)}}
-.enter{animation:fadeIn .18s ease-out both}
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.hidden { display: none; }
+
+/* Focus visible */
+button:focus-visible, .option:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 2px;
+}
