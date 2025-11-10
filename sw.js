@@ -1,4 +1,7 @@
-const CACHE_NAME = 'quiz-it-v1.2';
+// sw.js – versione FIXATA per iOS (zero falsi offline)
+const CACHE_NAME = 'quiz-it-v1.3';
+const DATA_CACHE = 'quiz-data-v1';
+
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -12,7 +15,7 @@ const PRECACHE_ASSETS = [
   '/icons/apple-touch-icon.png'
 ];
 
-// Install
+// INSTALL → precache shell
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_ASSETS))
@@ -20,32 +23,46 @@ self.addEventListener('install', e => {
   );
 });
 
-// Activate + cleanup
+// ACTIVATE → pulisci vecchie cache
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(names => {
-      return Promise.all(
-        names.filter(n => n !== CACHE_NAME).map(n => caches.delete(n))
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then(keys => Promise.all(
+      keys.map(key => {
+        if (key !== CACHE_NAME && key !== DATA_CACHE) {
+          return caches.delete(key);
+        }
+      })
+    )).then(() => self.clients.claim())
   );
 });
 
-// Fetch
+// FETCH → strategia perfetta per iOS
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
-  // Questions JSON - Stale-While-Revalidate
-  if (url.pathname.startsWith('/data/questions')) {
+  // 1. Gestione speciale per questions*.json
+  if (url.pathname.startsWith('/data/questions') || url.pathname.endsWith('.json')) {
     e.respondWith(
-      caches.open(CACHE_NAME).then(cache => {
-        return fetch(e.request).then(response => {
-          cache.put(e.request, response.clone());
-          return response;
-        }).catch(() => {
-          return cache.match(e.request).then(cached => {
-            if (cached) return cached;
-            return caches.match('/offline.html') || new Response('Offline', { status: 503 });
+      // Prova prima la cache
+      caches.open(DATA_CACHE).then(cache => {
+        return cache.match(e.request).then(cached => {
+          // Se c’è in cache → usala subito (veloce offline)
+          if (cached) {
+            // …ma aggiorna in background per la prossima volta
+            fetch(e.request).then(fresh => cache.put(e.request, fresh));
+            return cached;
+          }
+
+          // Se NON c’è in cache → prova rete
+          return fetch(e.request).then(fresh => {
+            cache.put(e.request, fresh.clone());
+            return fresh;
+          }).catch(() => {
+            // Solo qui sei davvero offline e senza dati
+            return new Response(
+              JSON.stringify({ error: 'offline-no-data' }),
+              { headers: { 'Content-Type': 'application/json' }}
+            );
           });
         });
       })
@@ -53,19 +70,10 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Shell assets - Cache First
+  // 2. Tutto il resto (HTML, CSS, JS, icone) → Cache First
   e.respondWith(
     caches.match(e.request).then(cached => {
-      return cached || fetch(e.request).then(fetched => {
-        if (e.request.destination === 'document' || e.request.destination === 'script' || e.request.destination === 'style') {
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, fetched.clone()));
-        }
-        return fetched;
-      });
-    }).catch(() => {
-      if (e.request.destination === 'document') {
-        return caches.match('/index.html');
-      }
+      return cached || fetch(e.request).catch(() => caches.match('/index.html'));
     })
   );
 });
