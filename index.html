@@ -1,136 +1,88 @@
 <!DOCTYPE html>
 <html lang="it">
-  <style>
-  /* Hotfix alto-contrasto risposte (forza override) */
-  .options button.correct{
-    background: #0f8d5e !important;
-    border-color: #0a704b !important;
-    color: #ffffff !important;
-  }
-  .options button.wrong{
-    background: #b91c1c !important;
-    border-color: #8f1717 !important;
-    color: #ffffff !important;
-  }
-  .explanation{
-    background: #0b1729 !important;
-    color: #e2e8f0 !important;
-    border-color: #2a3446 !important;
-    font-weight: 600;
-  }
-</style>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Quiz Italiano</title>
-
-  <!-- PWA -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <meta name="theme-color" content="#0f172a" />
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Quiz Italiano" />
 
-  <link rel="stylesheet" href="./styles.css" />
+  <title>Quiz Italiano</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+  <!-- iOS icons -->
+  <link rel="apple-touch-startup-image" href="icons/icon-512.png" />
+
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="app">
+<body>
+  <div id="app">
+    <!-- Safe area top -->
+    <div class="safe-top"></div>
 
-  <header class="topbar safe-top" role="banner">
-    <h1 class="title">Quiz Italiano</h1>
-    <button id="btnSettings" class="btn ghost" aria-label="Impostazioni">⚙️</button>
-  </header>
-
-  <main class="wrap safe-bottom" id="main" role="main" aria-live="polite">
-    <!-- Intro -->
-    <section id="intro" class="card enter">
-      <h2 class="h">Scegli il livello</h2>
-
-      <div class="segmented" role="tablist" aria-label="Livello del quiz">
-        <button class="segment active" data-level="medie" role="tab" aria-selected="true">Medie</button>
-        <button class="segment" data-level="licei" role="tab" aria-selected="false">Licei</button>
-        <button class="segment" data-level="universita" role="tab" aria-selected="false">Università</button>
+    <!-- Home Screen -->
+    <section id="home" class="screen active">
+      <h1 class="large-title">Quiz Italiano</h1>
+      <div class="segmented-control">
+        <button data-level="medie" class="seg active">Medie</button>
+        <button data-level="licei" class="seg">Licei</button>
+        <button data-level="universita" class="seg">Università</button>
       </div>
+      <button id="start-btn" class="primary-btn">Inizia Quiz</button>
+      <button id="settings-btn" class="secondary-btn">Impostazioni</button>
+    </section>
 
-      <p class="muted">Partita da <strong>20</strong> domande. Dopo ogni risposta compare la spiegazione. Niente ripetizioni tra partite consecutive.</p>
+    <!-- Settings -->
+    <section id="settings" class="screen">
+      <h1 class="large-title">Impostazioni</h1>
+      <label class="switch">
+        <input type="checkbox" id="timer-toggle" checked />
+        <span class="slider"></span>
+        Timer (30 secondi)
+      </label>
+      <button id="back-home" class="secondary-btn">Indietro</button>
+    </section>
 
-      <div class="row space">
-        <div class="stat">
-          <div class="label">Record</div>
-          <div class="value" id="bestLabel">0/20</div>
+    <!-- Quiz Screen -->
+    <section id="quiz" class="screen">
+      <div class="quiz-header">
+        <div class="progress">
+          <span id="current">1</span>/<span id="total">20</span>
         </div>
-        <button id="btnStart" class="btn primary">Avvia</button>
+        <div id="timer">30</div>
       </div>
+      <div id="question"></div>
+      <div id="options"></div>
+      <div id="feedback" class="hidden"></div>
     </section>
 
-    <!-- Quiz -->
-    <section id="quiz" class="card hidden" aria-hidden="true">
-      <div class="row space">
-        <div class="muted" id="qIndex">Domanda –/–</div>
-        <div class="badge" id="levelBadge">—</div>
+    <!-- Result Screen -->
+    <section id="result" class="screen">
+      <h1 class="large-title">Fine!</h1>
+      <div class="result-card">
+        <p class="score" id="score">0%</p>
+        <p id="evaluation"></p>
+        <p id="streak">Streak: <span>0</span></p>
+        <p id="record">Record: <span>0%</span></p>
       </div>
-
-      <div class="progress" aria-hidden="true"><div class="fill" id="progressFill"></div></div>
-
-      <div id="timer" class="timer hidden" aria-live="polite">30″</div>
-
-      <div id="category" class="chip"></div>
-      <h2 id="question" class="question"></h2>
-
-      <div id="options" class="options" role="group" aria-label="Opzioni di risposta"></div>
-
-      <div id="explanation" class="explanation hidden" role="region" aria-label="Spiegazione"></div>
-
-      <div class="actions">
-        <button id="btn5050" class="btn ghost">50:50</button>
-        <button id="btnNext" class="btn primary hidden">Prossima</button>
-        <button id="btnQuit" class="btn ghost">Esci</button>
-      </div>
+      <button id="share-btn" class="primary-btn">Condividi</button>
+      <button id="restart-btn" class="secondary-btn">Nuova partita</button>
     </section>
 
-    <!-- Risultati -->
-    <section id="results" class="card hidden" aria-hidden="true">
-      <h2 class="h">Risultato</h2>
-      <div class="grid4">
-        <div class="stat"><div class="value" id="percent">0%</div><div class="label">Percentuale</div></div>
-        <div class="stat"><div class="value" id="rightCount">0</div><div class="label">Corrette</div></div>
-        <div class="stat"><div class="value" id="wrongCount">0</div><div class="label">Sbagliate</div></div>
-        <div class="stat"><div class="value" id="bestScore">0/20</div><div class="label">Record</div></div>
-      </div>
-      <div class="actions">
-        <button id="btnShare" class="btn success">Condividi</button>
-        <button id="btnNewGame" class="btn primary" onclick="resetGame()">Nuova partita</button>
-      </div>
+    <!-- Offline fallback -->
+    <section id="offline" class="screen">
+      <h1 class="large-title">Offline</h1>
+      <p>Sei offline. Le domande sono in caricamento…</p>
+      <button id="retry-offline" class="primary-btn">Riprova</button>
     </section>
-  </main>
-
-  <!-- Sheet impostazioni -->
-  <div id="settingsSheet" class="sheet hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-    <div class="sheet-content safe-bottom">
-      <div class="sheet-handle" aria-hidden="true"></div>
-      <h3 id="settingsTitle">Impostazioni</h3>
-
-      <label class="row">
-        <span>Timer per domanda (30″)</span>
-        <input type="checkbox" id="toggleTimer" checked />
-      </label>
-
-      <label class="row">
-        <span>Haptics / Vibrazione</span>
-        <input type="checkbox" id="toggleHaptics" checked />
-      </label>
-
-      <div class="actions end">
-        <button id="btnCloseSettings" class="btn ghost">Chiudi</button>
-      </div>
-    </div>
   </div>
 
-  <script src="./app.js" defer></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-    }
-  </script>
+  <!-- Safe area bottom -->
+  <div class="safe-bottom"></div>
+
+  <script src="app.js" type="module"></script>
 </body>
 </html>
