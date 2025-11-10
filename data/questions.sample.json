@@ -1,11 +1,23 @@
 {
   "medie": [
-    {"id":"m1","q":"Participio passato di 'rompere'?","opts":["Romputo","Rotto","Rompato"],"ans":1,"exp":"'Rotto' è la forma corretta.","cat":"Grammatica"}
+    {"id":"m1","q":"Participio passato di 'rompere'?","opts":["Romputo","Rotto","Rompato"],"ans":1,"exp":"'Rotto' è la forma corretta.","cat":"Grammatica"},
+    {"id":"m2","q":"\"La mela\" in \"Luca mangia la mela\" è:","opts":["Soggetto","Complemento oggetto","Predicato"],"ans":1,"exp":"Risponde a 'che cosa?': complemento oggetto.","cat":"Analisi logica"},
+    {"id":"m3","q":"Sinonimo di 'effimero':","opts":["Duraturo","Breve","Grande"],"ans":1,"exp":"Effimero = di breve durata.","cat":"Lessico"},
+    {"id":"m4","q":"Accento in 'perché':","opts":["Grave","Acutò","Acuto"],"ans":2,"exp":"È 'é' (acuto).","cat":"Ortografia"},
+    {"id":"m5","q":"Plurale corretto (uso tecnico): i ____ della poltrona","opts":["bracci","braccia","braccie"],"ans":0,"exp":"In senso tecnico/figurato si usa 'bracci'.","cat":"Morfologia"}
   ],
   "licei": [
-    {"id":"l1","q":"'Silenzio assordante' è:","opts":["Metafora","Ossimoro","Iperbole"],"ans":1,"exp":"Contrasto tra termini opposti.","cat":"Figura retorica"}
+    {"id":"l1","q":"'Silenzio assordante' è:","opts":["Metafora","Ossimoro","Iperbole"],"ans":1,"exp":"Accosta termini opposti → ossimoro.","cat":"Figure retoriche"},
+    {"id":"l2","q":"Autore dei 'Sepolcri':","opts":["Ugo Foscolo","Giacomo Leopardi","Alessandro Manzoni"],"ans":0,"exp":"Pubblicati nel 1807.","cat":"Letteratura"},
+    {"id":"l3","q":"Congiuntivo imperfetto, 1ª plurale di 'andare':","opts":["Andassimo","Andremo","Andammo"],"ans":0,"exp":"'Che noi andassimo'.","cat":"Verbo"},
+    {"id":"l4","q":"La relativa introdotta da 'che' può essere:","opts":["Solo soggetto","Solo oggetto","Soggetto o oggetto"],"ans":2,"exp":"Dipende dal contesto sintattico.","cat":"Sintassi"},
+    {"id":"l5","q":"Figura: 'il dolce suono scuro'","opts":["Sinestesia","Allitterazione","Metonimia"],"ans":0,"exp":"Incrocia percezioni diverse.","cat":"Figure retoriche"}
   ],
   "universita": [
-    {"id":"u1","q":"Diatesi media in italiano:","opts":["Produttiva","Non produttiva","Limitata ai verbi pronominali"],"ans":2,"exp":"Presente nelle forme pronominali.","cat":"Linguistica"}
+    {"id":"u1","q":"Diatesi media in italiano è:","opts":["Produttiva","Non produttiva","Limitata a verbi pronominali"],"ans":2,"exp":"Realizzata in costruzioni pronominali a valore medio.","cat":"Linguistica"},
+    {"id":"u2","q":"In 'si dice che', 'si' è:","opts":["Riflessivo","Impersonale","Passivante"],"ans":1,"exp":"Marca impersonalità.","cat":"Sintassi"},
+    {"id":"u3","q":"Periodo ipotetico dell'irrealtà:","opts":["Ind. pres.+fut.","Cong. impf.+Cond. pass.","Cong. pres.+Cond. pres."],"ans":1,"exp":"Protasi al cong. imperfetto, apodosi al cond. passato.","cat":"Periodo ipotetico"},
+    {"id":"u4","q":"'Allotropia' (ling.):","opts":["Variazione fonetica di un morfo","Prestito non adattato","Raddoppiamento sintattico"],"ans":0,"exp":"Allomorfi di uno stesso morfema.","cat":"Morfologia"},
+    {"id":"u5","q":"Istanza enunciante:","opts":["Narratore implicito","Autore empirico","Voce extradiegetica"],"ans":0,"exp":"Figura che emette l’enunciazione.","cat":"Narratologia"}
   ]
 }
